@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-    Animated,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    View,
+  Animated,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  View,
 } from 'react-native';
 
 // Import components
@@ -12,6 +13,7 @@ import { BookingSection, ChatInterface, VeeHeader } from '../../components';
 
 // Import constants
 import { AI_RESPONSES, hotelData, restaurantData } from '../../constants';
+import { useChatContext } from '../../contexts/ChatContext';
 import { SCREEN_HEIGHT, searchScreenStyles } from '../../styles/searchScreenStyles';
 
 interface Message {
@@ -28,11 +30,27 @@ interface BookingItem {
 // Main SearchScreen Component
 export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isChatMode, setIsChatMode] = useState<boolean>(false);
+  const { isChatMode, setIsChatMode } = useChatContext();
   const [messages, setMessages] = useState<Message[]>([
     { text: "Hello! I'm Vee, your AI travel assistant. How can I help you today?", isUser: false }
   ]);
   const slideAnim = useRef(new Animated.Value(0)).current;
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      keyboardDidShowListener?.remove();
+      keyboardDidHideListener?.remove();
+    };
+  }, []);
 
   const handleSearchPress = (): void => {
     setIsChatMode(true);
@@ -87,9 +105,16 @@ export default function SearchScreen() {
     return (
       <KeyboardAvoidingView 
         style={searchScreenStyles.container} 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
-        <Animated.View style={[searchScreenStyles.chatOverlay, { transform: [{ translateY: chatTranslateY }] }]}>
+        <Animated.View style={[
+          searchScreenStyles.chatOverlay, 
+          { 
+            transform: [{ translateY: chatTranslateY }],
+            paddingBottom: Platform.OS === 'android' ? keyboardHeight : 0
+          }
+        ]}>
           <ChatInterface
             messages={messages}
             searchQuery={searchQuery}
