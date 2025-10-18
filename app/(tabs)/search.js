@@ -1,18 +1,13 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import {
-    Dimensions,
     ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
     View
 } from 'react-native';
-import { Card, TextInput } from 'react-native-paper';
-
-// Global Constants
-const SCREEN_WIDTH = Dimensions.get('window').width;
+import { Card, SearchBar } from 'react-native-paper';
 
 // Color Palette
 const COLOR_PRIMARY_DARK = '#120025';    // Very dark, rich indigo (Used for main background/card blocks)
@@ -22,7 +17,6 @@ const COLOR_TEXT_LIGHT = '#FFFFFF';      // Pure white for primary text
 
 // Gradients
 const GRADIENT_HEADER_COLORS = ['#2C003E', '#1D0041']; // Deep Royal to Dark Violet (Header)
-const GRADIENT_BUTTON_COLORS = ['#7B2CBF', '#9D4EDD']; // Vibrant Violet to Lighter Purple (Button/Accents)
 
 // Placeholder Data
 const hotelData = [
@@ -45,27 +39,25 @@ const VeeHeader = ({ searchQuery, setSearchQuery, onSearch }) => (
       style={styles.headerGradient}
     >
       <View style={styles.headerContent}>
-        <Text style={styles.headerTitle}>Hey, I'm Vee! How can I help you?</Text>
+        <Text style={styles.headerTitle}>Hey, I&apos;m Vee! How can I help you?</Text>
         <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
+          <SearchBar
             placeholder="Ask Vee..."
-            placeholderTextColor="#999"
-            value={searchQuery}
             onChangeText={setSearchQuery}
-            mode="outlined"
-            outlineColor="transparent"
-            activeOutlineColor="transparent"
-            contentStyle={styles.searchInputContent}
+            value={searchQuery}
+            onSubmitEditing={onSearch}
+            style={styles.searchBar}
+            inputStyle={styles.searchBarInput}
+            iconColor={COLOR_TEXT_ACCENT}
+            placeholderTextColor="#999"
+            theme={{
+              colors: {
+                primary: COLOR_TEXT_ACCENT,
+                onSurface: COLOR_TEXT_LIGHT,
+                surface: COLOR_TEXT_LIGHT,
+              },
+            }}
           />
-          <TouchableOpacity onPress={onSearch} style={styles.searchButtonContainer}>
-            <LinearGradient
-              colors={GRADIENT_BUTTON_COLORS}
-              style={styles.searchButton}
-            >
-              <MaterialCommunityIcons name="magnify" size={24} color={COLOR_TEXT_LIGHT} />
-            </LinearGradient>
-          </TouchableOpacity>
         </View>
       </View>
     </LinearGradient>
@@ -171,30 +163,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
     width: '100%',
-    gap: 10,
   },
-  searchInput: {
-    flex: 1,
+  searchBar: {
     backgroundColor: COLOR_TEXT_LIGHT,
     borderRadius: 25,
+    elevation: 0,
+    shadowOpacity: 0,
   },
-  searchInputContent: {
+  searchBarInput: {
     color: '#000',
     fontSize: 16,
-  },
-  searchButtonContainer: {
-    borderRadius: 25,
-    overflow: 'hidden',
-  },
-  searchButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   scrollView: {
     flex: 1,
