@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Animated,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView
@@ -11,9 +10,10 @@ import {
 import { BookingSection, ExpandableHeader } from '../../../components';
 
 // Import constants
-import { AI_RESPONSES, hotelData, restaurantData } from '../../../constants';
+import { hotelData, restaurantData } from '../../../constants';
 import { useChatContext } from '../../../contexts/ChatContext';
-import { SCREEN_HEIGHT, searchScreenStyles } from '../../../styles/searchScreenStyles';
+import { geminiService } from '../../../services/geminiService';
+import { searchScreenStyles } from '../../../styles/searchScreenStyles';
 
 interface Message {
   text: string;
@@ -33,32 +33,12 @@ export default function SearchScreen() {
   const [messages, setMessages] = useState<Message[]>([
     { text: "Hello! I'm Vee, your AI travel assistant. How can I help you today?", isUser: false }
   ]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const slideAnim = useRef(new Animated.Value(0)).current;
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (e) => {
-      setKeyboardHeight(e.endCoordinates.height);
-    });
-    
-    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardHeight(0);
-    });
+  // Keyboard handling is now managed in ExpandableHeader component
 
-    return () => {
-      keyboardDidShowListener?.remove();
-      keyboardDidHideListener?.remove();
-    };
-  }, []);
-
-  const handleSearchPress = (): void => {
-    setIsChatMode(true);
-    Animated.timing(slideAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
+  // handleSearchPress is now handled in ExpandableHeader component
 
   const handleBackToHome = (): void => {
     setIsChatMode(false);
@@ -78,19 +58,39 @@ export default function SearchScreen() {
     }).start();
   };
 
-  const handleSendMessage = (): void => {
-    if (searchQuery.trim()) {
-      const newMessage: Message = { text: searchQuery, isUser: true };
+  const handleSendMessage = async (): Promise<void> => {
+    if (searchQuery.trim() && !isLoading) {
+      const userMessage = searchQuery.trim();
+      const newMessage: Message = { text: userMessage, isUser: true };
       setMessages(prev => [...prev, newMessage]);
-      
-      // Simulate AI response with more realistic responses
-      setTimeout(() => {
-        const randomResponse = AI_RESPONSES[Math.floor(Math.random() * AI_RESPONSES.length)];
-        const aiResponse: Message = { text: randomResponse, isUser: false };
-        setMessages(prev => [...prev, aiResponse]);
-      }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds
-      
       setSearchQuery('');
+      setIsLoading(true);
+      
+      try {
+        // Send message to Gemini API
+        const response = await geminiService.sendMessage(userMessage);
+        
+        if (response.success && response.message) {
+          const aiResponse: Message = { text: response.message, isUser: false };
+          setMessages(prev => [...prev, aiResponse]);
+        } else {
+          // Handle error case
+          const errorMessage: Message = { 
+            text: response.message || "I'm sorry, I encountered an error. Please try again.", 
+            isUser: false 
+          };
+          setMessages(prev => [...prev, errorMessage]);
+        }
+      } catch (error) {
+        console.error('Error sending message to Gemini:', error);
+        const errorMessage: Message = { 
+          text: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.", 
+          isUser: false 
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -99,15 +99,7 @@ export default function SearchScreen() {
     // Implement item selection logic here
   };
 
-  const chatTranslateY = slideAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [SCREEN_HEIGHT, 0],
-  });
-
-  const headerTranslateY = slideAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -200],
-  });
+  // Animation values are now handled in ExpandableHeader component
 
   return (
     <KeyboardAvoidingView 
@@ -123,6 +115,7 @@ export default function SearchScreen() {
         onSearchFocus={handleSearchFocus}
         isExpanded={isChatMode}
         messages={messages}
+        isLoading={isLoading}
       />
       
       {!isChatMode && (

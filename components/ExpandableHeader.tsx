@@ -2,6 +2,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef } from 'react';
 import {
+    ActivityIndicator,
     Animated,
     Keyboard,
     KeyboardAvoidingView,
@@ -41,6 +42,7 @@ interface ExpandableHeaderProps {
   onSearchFocus: () => void;
   isExpanded: boolean;
   messages: Message[];
+  isLoading?: boolean;
 }
 
 const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({ 
@@ -50,7 +52,8 @@ const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({
   onBackToHome,
   onSearchFocus,
   isExpanded,
-  messages 
+  messages,
+  isLoading = false
 }) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const slideAnim = useRef(new Animated.Value(0)).current;
@@ -75,7 +78,7 @@ const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
     }
-  }, [isExpanded, messages]);
+  }, [isExpanded, messages, slideAnim]);
 
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -145,7 +148,7 @@ const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({
   });
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isExpanded ? styles.containerExpanded : styles.containerCollapsed]}>
       {/* Animated Header */}
       <View
         style={[
@@ -212,16 +215,17 @@ const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({
       </View>
 
       {/* Animated Chat Container */}
-      <Animated.View
-        style={[
-          styles.chatContainer,
-          {
-            transform: [{ translateY: chatTranslateY }],
-            opacity: chatContainerOpacity,
-          },
-        ]}
-        pointerEvents={isExpanded ? 'auto' : 'none'}
-      >
+      {isExpanded && (
+        <Animated.View
+          style={[
+            styles.chatContainer,
+            {
+              transform: [{ translateY: chatTranslateY }],
+              opacity: chatContainerOpacity,
+            },
+          ]}
+          pointerEvents="auto"
+        >
         <KeyboardAvoidingView
           style={styles.keyboardAvoiding}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -245,6 +249,12 @@ const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({
                       isUser={message.isUser}
                     />
                   ))}
+                  {isLoading && (
+                    <View style={styles.loadingContainer}>
+                      <ActivityIndicator size="small" color={COLOR_TEXT_ACCENT} />
+                      <Text style={styles.loadingText}>Vee is thinking...</Text>
+                    </View>
+                  )}
                 </ScrollView>
               </View>
               
@@ -273,22 +283,37 @@ const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({
                       },
                     }}
                   />
-                  <TouchableOpacity onPress={onSendMessage} style={styles.sendButton}>
-                    <MaterialCommunityIcons name="send" size={24} color={COLOR_TEXT_LIGHT} />
+                  <TouchableOpacity 
+                    onPress={onSendMessage} 
+                    style={styles.sendButton}
+                    disabled={isLoading || !searchQuery.trim()}
+                  >
+                    {isLoading ? (
+                      <ActivityIndicator size="small" color={COLOR_TEXT_LIGHT} />
+                    ) : (
+                      <MaterialCommunityIcons name="send" size={24} color={COLOR_TEXT_LIGHT} />
+                    )}
                   </TouchableOpacity>
                 </View>
               </Animated.View>
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-      </Animated.View>
+        </Animated.View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    // Base container styles
+  },
+  containerExpanded: {
     flex: 1,
+  },
+  containerCollapsed: {
+    // No flex, so it only takes the space it needs
   },
   headerContainer: {
     overflow: 'hidden',
@@ -403,6 +428,19 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     padding: 5,
     alignSelf: 'center',
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  loadingText: {
+    marginLeft: 8,
+    color: COLOR_TEXT_ACCENT,
+    fontSize: 14,
+    fontStyle: 'italic',
   },
 });
 
