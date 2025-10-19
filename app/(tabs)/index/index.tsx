@@ -4,17 +4,16 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
-  View,
+  ScrollView
 } from 'react-native';
 
 // Import components
-import { BookingSection, ChatInterface, VeeHeader } from '../../components';
+import { BookingSection, ExpandableHeader } from '../../../components';
 
 // Import constants
-import { AI_RESPONSES, hotelData, restaurantData } from '../../constants';
-import { useChatContext } from '../../contexts/ChatContext';
-import { SCREEN_HEIGHT, searchScreenStyles } from '../../styles/searchScreenStyles';
+import { AI_RESPONSES, hotelData, restaurantData } from '../../../constants';
+import { useChatContext } from '../../../contexts/ChatContext';
+import { SCREEN_HEIGHT, searchScreenStyles } from '../../../styles/searchScreenStyles';
 
 interface Message {
   text: string;
@@ -70,6 +69,15 @@ export default function SearchScreen() {
     }).start();
   };
 
+  const handleSearchFocus = (): void => {
+    setIsChatMode(true);
+    Animated.timing(slideAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const handleSendMessage = (): void => {
     if (searchQuery.trim()) {
       const newMessage: Message = { text: searchQuery, isUser: true };
@@ -101,60 +109,41 @@ export default function SearchScreen() {
     outputRange: [0, -200],
   });
 
-  if (isChatMode) {
-    return (
-      <KeyboardAvoidingView 
-        style={searchScreenStyles.container} 
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-      >
-        <Animated.View style={[
-          searchScreenStyles.chatOverlay, 
-          { 
-            transform: [{ translateY: chatTranslateY }],
-            paddingBottom: Platform.OS === 'android' ? keyboardHeight : 0
-          }
-        ]}>
-          <ChatInterface
-            messages={messages}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onSendMessage={handleSendMessage}
-            onBackToHome={handleBackToHome}
-          />
-        </Animated.View>
-      </KeyboardAvoidingView>
-    );
-  }
-
   return (
-    <View style={searchScreenStyles.container}>
-      <Animated.View style={{ transform: [{ translateY: headerTranslateY }] }}>
-        <VeeHeader
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          onSearchPress={handleSearchPress}
-          isChatMode={isChatMode}
-        />
-      </Animated.View>
+    <KeyboardAvoidingView 
+      style={searchScreenStyles.container} 
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+    >
+      <ExpandableHeader
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSendMessage={handleSendMessage}
+        onBackToHome={handleBackToHome}
+        onSearchFocus={handleSearchFocus}
+        isExpanded={isChatMode}
+        messages={messages}
+      />
       
-      <ScrollView
-        style={searchScreenStyles.scrollView}
-        contentContainerStyle={searchScreenStyles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <BookingSection
-          title="Book a hotel"
-          data={hotelData}
-          onItemPress={handleItemPress}
-        />
-        
-        <BookingSection
-          title="Book a restaurant"
-          data={restaurantData}
-          onItemPress={handleItemPress}
-        />
-      </ScrollView>
-    </View>
+      {!isChatMode && (
+        <ScrollView
+          style={searchScreenStyles.scrollView}
+          contentContainerStyle={searchScreenStyles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <BookingSection
+            title="Book a hotel"
+            data={hotelData}
+            onItemPress={handleItemPress}
+          />
+          
+          <BookingSection
+            title="Book a restaurant"
+            data={restaurantData}
+            onItemPress={handleItemPress}
+          />
+        </ScrollView>
+      )}
+    </KeyboardAvoidingView>
   );
 }
