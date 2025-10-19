@@ -23,6 +23,8 @@ import {
     COLOR_TEXT_LIGHT,
     GRADIENT_HEADER_COLORS
 } from '../constants/colors';
+import { BookingItem } from '../types/booking';
+import { AIRecommendation } from '../types/gemini';
 import ChatMessage from './ChatMessage';
 
 const HEADER_COLLAPSED_HEIGHT = 200;
@@ -32,6 +34,8 @@ const SEARCH_TRANSITION_OFFSET = HEADER_COLLAPSED_HEIGHT - HEADER_EXPANDED_HEIGH
 interface Message {
   text: string;
   isUser: boolean;
+  suggestions?: BookingItem[];
+  aiRecommendation?: AIRecommendation;
 }
 
 interface ExpandableHeaderProps {
@@ -43,6 +47,7 @@ interface ExpandableHeaderProps {
   isExpanded: boolean;
   messages: Message[];
   isLoading?: boolean;
+  onItemPress?: (item: BookingItem) => void;
 }
 
 const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({ 
@@ -53,7 +58,8 @@ const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({
   onSearchFocus,
   isExpanded,
   messages,
-  isLoading = false
+  isLoading = false,
+  onItemPress
 }) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const slideAnim = useRef(new Animated.Value(0)).current;
@@ -247,6 +253,9 @@ const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({
                       key={index}
                       message={message.text}
                       isUser={message.isUser}
+                      suggestions={message.suggestions}
+                      aiRecommendation={message.aiRecommendation}
+                      onItemPress={onItemPress}
                     />
                   ))}
                   {isLoading && (

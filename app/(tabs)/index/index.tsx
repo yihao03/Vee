@@ -10,21 +10,59 @@ import {
 import { BookingSection, ExpandableHeader } from '../../../components';
 
 // Import constants
-import { hotelData, restaurantData } from '../../../constants';
 import { useChatContext } from '../../../contexts/ChatContext';
+import partnersData from '../../../partners/all.json';
 import { geminiService } from '../../../services/geminiService';
 import { searchScreenStyles } from '../../../styles/searchScreenStyles';
+import { BookingItem } from '../../../types/booking';
+import { AIRecommendation } from '../../../types/gemini';
+
+// Type the JSON data
+interface PartnersData {
+  hotels: {
+    name: string;
+    short_description: string;
+    long_description: string;
+    price: string;
+    image_url: string;
+  }[];
+  restaurants: {
+    name: string;
+    short_description: string;
+    long_description: string;
+    price: string;
+    image_url: string;
+  }[];
+}
 
 interface Message {
   text: string;
   isUser: boolean;
+  suggestions?: BookingItem[];
+  aiRecommendation?: AIRecommendation;
 }
 
-interface BookingItem {
-  id: string;
-  name: string;
-  imageUrl: string;
-}
+
+// Transform data from JSON to match BookingItem interface
+const transformHotelData = (hotels: any[]): BookingItem[] => {
+  return hotels.map((hotel, index) => ({
+    id: `H${index + 1}`,
+    name: hotel.name,
+    imageUrl: hotel.image_url,
+    short_description: hotel.short_description,
+    price: hotel.price
+  }));
+};
+
+const transformRestaurantData = (restaurants: any[]): BookingItem[] => {
+  return restaurants.map((restaurant, index) => ({
+    id: `R${index + 1}`,
+    name: restaurant.name,
+    imageUrl: restaurant.image_url,
+    short_description: restaurant.short_description,
+    price: restaurant.price
+  }));
+};
 
 // Main SearchScreen Component
 export default function SearchScreen() {
@@ -35,6 +73,14 @@ export default function SearchScreen() {
   ]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const slideAnim = useRef(new Animated.Value(0)).current;
+
+  // Transform data from JSON
+  const hotelData = transformHotelData((partnersData as PartnersData).hotels);
+  const restaurantData = transformRestaurantData((partnersData as PartnersData).restaurants);
+  
+  // Debug logging
+  console.log('Hotel data:', hotelData.slice(0, 2));
+  console.log('Restaurant data:', restaurantData.slice(0, 2));
 
   // Keyboard handling is now managed in ExpandableHeader component
 
@@ -71,7 +117,12 @@ export default function SearchScreen() {
         const response = await geminiService.sendMessage(userMessage);
         
         if (response.success && response.message) {
-          const aiResponse: Message = { text: response.message, isUser: false };
+          const aiResponse: Message = { 
+            text: response.message, 
+            isUser: false,
+            suggestions: response.suggestions,
+            aiRecommendation: response.aiRecommendation
+          };
           setMessages(prev => [...prev, aiResponse]);
         } else {
           // Handle error case
@@ -116,6 +167,7 @@ export default function SearchScreen() {
         isExpanded={isChatMode}
         messages={messages}
         isLoading={isLoading}
+        onItemPress={handleItemPress}
       />
       
       {!isChatMode && (

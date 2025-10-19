@@ -1,0 +1,146 @@
+{
+    "hotels": [
+        {
+          "name": "Raffles Singapore",
+          "short_description": "Iconic colonial-era all-suite grande dame with legendary butler service and heritage bars.",
+          "long_description": "A Singapore landmark set around palm-lined courtyards, Raffles pairs stately colonial architecture with contemporary comforts. Suites feature high ceilings, teak floors, and discreet butler service, while heritage venues like the Long Bar and Writers Bar anchor its storied social life. Guests come for a sense of occasion—afternoon tea in the Grand Lobby, spa rituals in tranquil treatment rooms, and a collection of acclaimed restaurants—steps from the Civic District’s museums and the river promenade.",
+          "price": "from SGD 1,200+ per night (estimate)",
+          "image_url": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "Marina Bay Sands",
+          "short_description": "Landmark integrated resort famed for its rooftop SkyPark and infinity pool overlooking the bay.",
+          "long_description": "Three soaring towers crowned by the SkyPark define Singapore’s skyline. Rooms and suites frame panoramic views of Gardens by the Bay or the city, while the exclusive rooftop infinity pool is a world destination in itself. The resort concentrates luxury at scale—designer shopping, a cutting-edge casino, destination dining by celebrity chefs, an art-science museum, and extensive event spaces—all connected to the Marina Bay waterfront and downtown’s attractions.",
+          "price": "from SGD 650+ per night (estimate)",
+          "image_url": "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "Capella Singapore (Sentosa)",
+          "short_description": "Lush, secluded retreat blending heritage buildings with contemporary design and a serene spa.",
+          "long_description": "Set on a hill amid 30 acres of rainforest on Sentosa, Capella marries restored colonial bungalows with sinuous, contemporary architecture. Villas and manors offer private plunge pools and generous indoor–outdoor living, complemented by a calming spa and personal assistants who tailor each stay. Despite the resort feel—peacocks often wander the lawns—you’re minutes from beaches, golf, and the city’s cultural core by car.",
+          "price": "from SGD 900+ per night (estimate)",
+          "image_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "The Fullerton Bay Hotel Singapore",
+          "short_description": "Chic waterfront luxury on Marina Bay with glamorous interiors and sweeping bay views.",
+          "long_description": "A contemporary glass-and-steel jewel along the bay promenade, The Fullerton Bay Hotel delivers boutique-scale sophistication and front-row views of the Marina Bay skyline. Rooms showcase polished materials and floor-to-ceiling windows; corner suites add expansive terraces. A rooftop pool and Lantern bar create a stylish perch for sunset, while Clifford Pier and the CBD sit right at your doorstep for dining and business.",
+          "price": "from SGD 700+ per night (estimate)",
+          "image_url": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "The Ritz-Carlton, Millenia Singapore",
+          "short_description": "Polished luxury near Marina Bay with spacious rooms and panoramic city or bay views.",
+          "long_description": "Known for its museum-worthy art collection and signature octagonal window bathrooms, The Ritz-Carlton offers generously sized rooms, impeccable service, and commanding vistas of Marina Bay or the city. A serene spa, club lounge with curated culinary presentations, and proximity to the Promenade and arts precinct make it a favorite for both weekend indulgence and executive stays.",
+          "price": "from SGD 600+ per night (estimate)",
+          "image_url": "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "The St. Regis Singapore",
+          "short_description": "Classic luxury off Orchard Road with refined dining and hallmark butler service.",
+          "long_description": "Steps from Orchard Road and the embassy district, The St. Regis stages old-world glamour with a notable private art collection and attentive butler service. Rooms emphasize plush comfort—marble baths, rich textiles, and thoughtful lighting—while restaurants and the hotel bar lean into classic sophistication. A tranquil spa and outdoor pool provide respite from the city’s buzz.",
+          "price": "from SGD 520+ per night (estimate)",
+          "image_url": "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "Mandarin Oriental, Singapore",
+          "short_description": "Modern bayfront stay with stylish rooms, acclaimed restaurants and relaxing spa.",
+          "long_description": "Set between Marina Square and the bay, the hotel delivers a polished, contemporary aesthetic with serene rooms and suites, many capturing sparkling water or skyline views. Dining spans refined Asian to international favorites, complemented by a spa and outdoor pool terrace ideal for unwinding after a day around Esplanade, Suntec, or Gardens by the Bay.",
+          "price": "from SGD 650+ per night (estimate)",
+          "image_url": "https://commons.wikimedia.org/wiki/File:Singapore_Mandarin-Oriental-01.jpg"
+        },
+        {
+          "name": "The Fullerton Hotel Singapore",
+          "short_description": "Neoclassical heritage icon in the Civic District with river and bay outlooks.",
+          "long_description": "Housed in Singapore’s former General Post Office, The Fullerton blends civic grandeur—soaring atrium, Doric columns, sweeping staircases—with contemporary guestrooms overlooking the Singapore River or Marina Bay. Heritage tours, an elegant spa, and riverside dining connect guests to the city’s history, while Merlion Park, Boat Quay, and the museum district are a short stroll away.",
+          "price": "from SGD 480+ per night (estimate)",
+          "image_url": "https://commons.wikimedia.org/wiki/File:Singapore_The-Fullerton-Hotel-Singapore-01.jpg"
+        },
+        {
+          "name": "The Capitol Kempinski Hotel Singapore",
+          "short_description": "Refined luxury set within beautifully restored historic buildings in the Civic District.",
+          "long_description": "Occupying the restored Capitol Building and Stamford House, this boutique luxury hotel exudes European elegance with high ceilings, bespoke furnishings, and calm, light-filled bathrooms. Guests appreciate the discreet service, saltwater relaxation pool, and direct access to Capitol’s dining arcade and theatre, with the National Gallery and Raffles City just moments away.",
+          "price": "from SGD 520+ per night (estimate)",
+          "image_url": "https://commons.wikimedia.org/wiki/File:The_Capitol_Kempinski_Hotel,_Singapore.jpg"
+        },
+        {
+          "name": "Conrad Centennial Singapore",
+          "short_description": "Elegant, well-located 5-star with generous rooms and easy access to Marina Bay.",
+          "long_description": "Anchored in the Marina Centre/Suntec precinct, Conrad Centennial offers spacious rooms with city or bay glimpses, thoughtful amenities, and warmly professional service. Club-level benefits, a sunny outdoor pool, and a well-regarded breakfast spread add appeal, while covered walkways connect you to malls, restaurants, the Promenade MRT, and the bayfront.",
+          "price": "from SGD 500+ per night (estimate)",
+          "image_url": "https://commons.wikimedia.org/wiki/File:Conrad_International_Centennial_Singapore.jpg"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Les Amis",
+          "short_description": "Parisian-style haute cuisine institution with one of Asia’s deepest wine lists; polished, classic service.",
+          "long_description": "A pillar of Singapore fine dining since the 1990s, Les Amis champions classical French technique, peerless sauces, and top seasonal produce—think pristine shellfish, wild game in season, and artisan cheeses. The dining room is elegant without being fussy, service is choreographed yet warm, and the wine program spans benchmark Burgundy and Bordeaux to rare grower bottlings and large formats, all carefully cellared.",
+          "price": "Degustation dinner from SGD 595++ per person",
+          "image_url": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "Zén",
+          "short_description": "Frantzén Group’s Singapore outpost serving a choreographed Nordic-Japanese tasting across three shophouse floors.",
+          "long_description": "Dining at Zén unfolds as a guided journey: a welcome in the living room, precision courses at the kitchen counter, and a refined finish in the dining salon. The menu blends Nordic sensibility with Japanese purity—cold-water seafood, pristine vegetables, and delicate broths—delivered with cinematic pacing. Beverage pairings balance classic wines with inventive non-alcoholic infusions and sakes.",
+          "price": "Lunch SGD 395++ • Dinner SGD 580++ per person",
+          "image_url": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "Saint Pierre",
+          "short_description": "Contemporary French fine dining with floor-to-ceiling Marina Bay views and refined tasting menus.",
+          "long_description": "Chef-owner Emmanuel Stroobant presents produce-driven French cuisine with thoughtful Asian notes and a light, elegant touch. Seasonal tasting menus highlight clarity and balance, from delicately handled seafood to immaculate sauces and patisserie. Service is gracious, the room is serene with bay panoramas, and pairings span classic Old World selections to a curated non-alcoholic flight.",
+          "price": "Set lunch from SGD 198++ • Dinner tasting from SGD 398++ (Grand Opulence window table SGD 488++)",
+          "image_url": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "Shoukouwa",
+          "short_description": "Intimate edomae omakase (very limited seats) showcasing top-season seafood flown from Toyosu.",
+          "long_description": "With only a handful of counter seats and hushed, minimalist decor, Shoukouwa focuses attention on the itamae and the day’s catch. Omakase progresses from delicate sashimi to precise nigiri, emphasizing temperature, rice seasoning, and knife work. Fish is sourced frequently from Toyosu, and service is quietly attentive—ideal for purists who value restraint and craft.",
+          "price": "Miyabi Omakase SGD 380++ • Hana Omakase SGD 520++",
+          "image_url": "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "Waku Ghin by Tetsuya Wakuda",
+          "short_description": "Japanese fine dining at Marina Bay Sands; Chef’s Table experience with precision-driven seasonal courses.",
+          "long_description": "Tetsuya Wakuda’s Singapore flagship offers a chef-led experience built around premium seafood, pristine vegetables, and superb beef, presented over a flowing sequence of courses. The room balances luxury with intimacy, while the bar and dessert salon extend the evening with crafted cocktails and delicate sweets. Expect immaculate produce and technique, delivered with understated hospitality.",
+          "price": "Chef’s Table Menu at SGD 550++ (bar dining à la carte also available)",
+          "image_url": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "Meta",
+          "short_description": "Chef Sun Kim’s Korean-influenced contemporary cuisine, elegantly modern and ingredient-driven.",
+          "long_description": "Meta weaves Korean flavors—fermentation, pickling, depth of spice—into a sleek, modern tasting menu informed by Japanese produce and French technique. Dishes are composed yet soulful, service is upbeat and polished, and the beverage program is strong across wines, sake, and low-ABV options. It’s an intimate room where the details matter without ever feeling stiff.",
+          "price": "Lunch SGD 248++ • Dinner SGD 278++ (6-course) / SGD 328++ (8-course)",
+          "image_url": "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800&h=600&fit=crop&crop=center"
+        },
+        {
+          "name": "Restaurant Labyrinth",
+          "short_description": "‘New Singaporean’ cuisine that reimagines local flavors and heritage dishes with fine-dining technique.",
+          "long_description": "Labyrinth tells a Singapore story through ingredients sourced from local farms and fishers and dishes that riff on hawker classics. Expect playful plating that never loses sight of flavor—crab, laksa, kaya, and durian may appear in surprising forms—supported by a service team skilled at narration and pacing. Pairings spotlight regional spirits, teas, and wines.",
+          "price": "Lunch SGD 208++ • Dinner SGD 298++",
+          "image_url": "https://www.restaurantlabyrinth.com/"
+        },
+        {
+          "name": "Seroja",
+          "short_description": "Chef Kevin Wong’s refined exploration of Malay Archipelago flavors in an elegant, produce-focused tasting.",
+          "long_description": "Seroja celebrates Nusantara traditions—spice pastes, coastal herbs, smoke, and coconut—in a graceful, contemporary idiom. Menus evolve with the seasons and draw on regional seafood and heritage produce, while the dining room’s warm woods and soft lighting create a calm backdrop. Thoughtful non-alcoholic and tea pairings complement the cuisine’s layered aromatics.",
+          "price": "Lunch (Kuntum) SGD 218++ • Dinner (Nusantara) SGD 288++",
+          "image_url": "https://seroja.sg/"
+        },
+        {
+          "name": "Cloudstreet",
+          "short_description": "Progressive, sophisticated tasting menus marrying diverse influences with a strong beverage program.",
+          "long_description": "Chef Rishi Naleendra’s flagship frames bold, precise flavors with polished hospitality. The tasting menu often reflects Sri Lankan heritage alongside global inspirations, delivered through intricate sauces, pristine seafood, and carefully calibrated spice. A long, elegant counter and cozy dining room keep the mood intimate, while wine and non-alcoholic pairings are curated with real intent.",
+          "price": "Lunch from ~SGD 248++ • Dinner from ~SGD 398++ (subject to change/seasonality)",
+          "image_url": "https://cloudstreet.com.sg/gallery/"
+        },
+        {
+          "name": "CUT by Wolfgang Puck",
+          "short_description": "Michelin-starred modern steakhouse at Marina Bay Sands with an expansive global wine list.",
+          "long_description": "CUT delivers a glamorous, clubby take on the modern steakhouse: meticulous sourcing across USDA Prime, Australian, and Japanese wagyu; confident execution on the grill; and sides and starters that go far beyond afterthoughts. Service is polished yet energetic, cocktails are serious, and the wine book runs deep in both classic regions and steak-friendly new-wave producers.",
+          "price": "À la carte; typical spend ~SGD 180–300++ per person depending on cuts and courses",
+          "image_url": "https://www.marinabaysands.com/restaurants/celebrity-chefs/cut.html"
+        }
+      ]
+}

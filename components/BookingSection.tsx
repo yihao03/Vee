@@ -1,59 +1,142 @@
+import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
 import { COLOR_TEXT_ACCENT, COLOR_TEXT_LIGHT } from '../constants/colors';
-
-interface BookingItem {
-  id: string;
-  name: string;
-  imageUrl: string;
-}
+import { BookingItem } from '../types/booking';
 
 interface BookingSectionProps {
   title: string;
   data: BookingItem[];
   onItemPress: (item: BookingItem) => void;
+  showTitle?: boolean;
+  compact?: boolean;
+  horizontal?: boolean;
 }
 
-const BookingSection: React.FC<BookingSectionProps> = ({ title, data, onItemPress }) => (
-  <View style={styles.bookingSection}>
-    <Text style={styles.sectionTitle}>{title}</Text>
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.horizontalScrollContent}
+// Enhanced image component with better error handling
+const BookingImage: React.FC<{ imageUrl: string; name: string }> = ({ imageUrl, name }) => {
+  const [imageError, setImageError] = React.useState(false);
+  const [imageLoading, setImageLoading] = React.useState(true);
+
+  // Add timeout to prevent infinite loading
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (imageLoading) {
+        console.log('⏰ Image load timeout for', name);
+        setImageError(true);
+        setImageLoading(false);
+      }
+    }, 8000); // 8 second timeout
+
+    return () => clearTimeout(timeout);
+  }, [imageLoading, name]);
+
+  const handleLoad = () => {
+    console.log('✅ Image loaded successfully for', name);
+    setImageLoading(false);
+  };
+
+  const handleError = (error: any) => {
+    console.log('❌ Image load error for', name, ':', error);
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  // Show loading state
+  if (imageLoading) {
+    return (
+      <View style={styles.placeholderContainer}>
+        <Text style={styles.placeholderText}>⏳</Text>
+        <Text style={styles.placeholderLabel}>Loading...</Text>
+      </View>
+    );
+  }
+
+  // Show error state
+  if (imageError) {
+    return (
+      <View style={styles.placeholderContainer}>
+        <Text style={styles.placeholderText}>🏨</Text>
+        <Text style={styles.placeholderLabel}>Image</Text>
+      </View>
+    );
+  }
+
+  return (
+    <Image
+      source={{ uri: imageUrl }}
+      style={styles.cardImage}
+      contentFit="cover"
+      transition={300}
+      onLoad={handleLoad}
+      onError={handleError}
+      placeholder="🏨"
+      placeholderContentFit="cover"
+    />
+  );
+};
+
+const BookingSection: React.FC<BookingSectionProps> = ({ 
+  title, 
+  data, 
+  onItemPress, 
+  showTitle = true, 
+  compact = false,
+  horizontal = true 
+}) => {
+  const renderCard = (item: BookingItem) => (
+    <TouchableOpacity
+      key={item.id}
+      onPress={() => onItemPress(item)}
+      style={[styles.cardContainer, compact && styles.compactCardContainer]}
     >
-      {data.map((item) => (
-        <TouchableOpacity
-          key={item.id}
-          onPress={() => onItemPress(item)}
-          style={styles.cardContainer}
+      <Card style={[styles.card, compact && styles.compactCard]}>
+        <BookingImage imageUrl={item.imageUrl} name={item.name} />
+        <LinearGradient
+          colors={['rgba(0, 0, 0, 0.9)', 'rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0)']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.cardNameContainer}
         >
-          <Card style={styles.card}>
-            <Card.Cover
-              source={{ uri: item.imageUrl }}
-              style={styles.cardImage}
-            />
-            <LinearGradient
-              colors={['rgba(0, 0, 0, 0.9)', 'rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.cardNameContainer}
-            >
-              <Text style={styles.cardName}>{item.name}</Text>
-            </LinearGradient>
-          </Card>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
-  </View>
-);
+          <Text style={[styles.cardName, compact && styles.compactCardName]}>{item.name}</Text>
+          {item.price && (
+            <Text style={[styles.cardPrice, compact && styles.compactCardPrice]}>{item.price}</Text>
+          )}
+        </LinearGradient>
+      </Card>
+    </TouchableOpacity>
+  );
+
+  return (
+    <View style={[styles.bookingSection, compact && styles.compactBookingSection]}>
+      {showTitle && <Text style={[styles.sectionTitle, compact && styles.compactSectionTitle]}>{title}</Text>}
+      {horizontal ? (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.horizontalScrollContent}
+        >
+          {data.map(renderCard)}
+        </ScrollView>
+      ) : (
+        <View style={styles.verticalContainer}>
+          {data.map(renderCard)}
+        </View>
+      )}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   bookingSection: {
     marginVertical: 20,
     paddingHorizontal: 20,
+  },
+  compactBookingSection: {
+    marginVertical: 8,
+    paddingHorizontal: 4,
   },
   sectionTitle: {
     fontSize: 20,
@@ -61,12 +144,23 @@ const styles = StyleSheet.create({
     color: COLOR_TEXT_LIGHT,
     marginBottom: 15,
   },
+  compactSectionTitle: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
   horizontalScrollContent: {
     paddingRight: 20,
+  },
+  verticalContainer: {
+    flexDirection: 'column',
   },
   cardContainer: {
     marginRight: 15,
     width: 200,
+  },
+  compactCardContainer: {
+    marginRight: 8,
+    width: 160,
   },
   card: {
     borderRadius: 15,
@@ -79,6 +173,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  compactCard: {
+    borderRadius: 12,
+    elevation: 3,
   },
   cardImage: {
     height: 120,
@@ -99,6 +197,35 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'left',
+  },
+  compactCardName: {
+    fontSize: 12,
+  },
+  cardPrice: {
+    color: COLOR_TEXT_LIGHT,
+    fontSize: 12,
+    marginTop: 2,
+    opacity: 0.9,
+  },
+  compactCardPrice: {
+    fontSize: 10,
+  },
+  placeholderContainer: {
+    width: '100%',
+    height: 120,
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  placeholderText: {
+    fontSize: 48,
+    marginBottom: 8,
+  },
+  placeholderLabel: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
   },
 });
 
