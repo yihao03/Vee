@@ -30,7 +30,9 @@ Key guidelines:
 - When recommending places, mention why they're good choices
 - Ask follow-up questions to better understand user needs
 - Keep responses concise but informative
-- If you don't know something, admit it and offer to help find the information`,
+- If you don't know something, admit it and offer to help find the information
+
+IMPORTANT: After users successfully book restaurants or hotels, always follow up with a helpful query about booking a cab from their current location. This should be done naturally in the conversation flow to provide additional value and convenience.`,
       generationConfig: {
         maxOutputTokens: GEMINI_CONFIG.MAX_TOKENS,
         temperature: GEMINI_CONFIG.TEMPERATURE,
@@ -77,6 +79,11 @@ Key guidelines:
           } else {
             suggestions = [...suggestions, ...bookingService.getRandomRestaurants(5)];
           }
+        }
+
+        if (bookingAnalysis.type === 'cabs') {
+          // For cab bookings, we'll provide a helpful response about transportation options
+          suggestions = this.getCabBookingSuggestions();
         }
 
         // STEP 3: Create AI prompt with available options for selection
@@ -134,6 +141,35 @@ Key guidelines:
         const result = await chat.sendMessage(userMessage);
         const response = await result.response;
         aiMessage = response.text();
+      }
+
+      // Check if this is a booking completion and trigger cab follow-up
+      if (this.shouldTriggerCabFollowUp(userMessage)) {
+        const cabFollowUpMessage = this.generateCabFollowUpMessage();
+        const cabSuggestions = this.getCabBookingSuggestions();
+        
+        // Add the original AI response
+        const aiChatMessage: ChatMessage = {
+          text: aiMessage,
+          isUser: false,
+          timestamp: new Date()
+        };
+        this.chatHistory.push(aiChatMessage);
+
+        // Add cab follow-up message
+        const cabFollowUpChatMessage: ChatMessage = {
+          text: cabFollowUpMessage,
+          isUser: false,
+          timestamp: new Date()
+        };
+        this.chatHistory.push(cabFollowUpChatMessage);
+
+        return {
+          success: true,
+          message: `${aiMessage}\n\n${cabFollowUpMessage}`,
+          suggestions: cabSuggestions,
+          aiRecommendation: aiRecommendation
+        };
       }
 
       // Add AI response to history
@@ -301,6 +337,58 @@ Focus on matching their specific requirements and preferences. Be conversational
     }
 
     return selectedOptions.slice(0, 3);
+  }
+
+  /**
+   * Get cab booking suggestions
+   */
+  private getCabBookingSuggestions(): BookingItem[] {
+    return [
+      {
+        id: 'cab-1',
+        name: 'Uber',
+        imageUrl: 'https://via.placeholder.com/300x200/1a1a1a/ffffff?text=Uber',
+        short_description: 'Reliable ride-sharing service with multiple vehicle options',
+        price: 'Starting from $8',
+        long_description: 'Book a ride with Uber - the most popular ride-sharing service. Choose from various vehicle types including economy, comfort, and premium options.'
+      },
+      {
+        id: 'cab-2',
+        name: 'Lyft',
+        imageUrl: 'https://via.placeholder.com/300x200/ff00bf/ffffff?text=Lyft',
+        short_description: 'Friendly rides with competitive pricing',
+        price: 'Starting from $7',
+        long_description: 'Get a ride with Lyft - known for friendly drivers and competitive pricing. Available in most major cities.'
+      },
+      {
+        id: 'cab-3',
+        name: 'Local Taxi',
+        imageUrl: 'https://via.placeholder.com/300x200/ffff00/000000?text=Taxi',
+        short_description: 'Traditional taxi service with local drivers',
+        price: 'Metered fare',
+        long_description: 'Book a traditional taxi with local drivers who know the area well. Metered pricing based on distance and time.'
+      }
+    ];
+  }
+
+  /**
+   * Check if the last message indicates a completed booking and trigger cab follow-up
+   */
+  private shouldTriggerCabFollowUp(userMessage: string): boolean {
+    const bookingCompletionKeywords = [
+      'booked', 'confirmed', 'reserved', 'completed', 'done', 'finished',
+      'successful', 'paid', 'transaction', 'receipt'
+    ];
+    
+    const lowerMessage = userMessage.toLowerCase();
+    return bookingCompletionKeywords.some(keyword => lowerMessage.includes(keyword));
+  }
+
+  /**
+   * Generate cab booking follow-up message
+   */
+  private generateCabFollowUpMessage(): string {
+    return "Great! Your booking is confirmed. 🎉 Would you like me to help you book a cab from your current location to get there? I can show you available ride options with different price ranges and vehicle types.";
   }
 
 }

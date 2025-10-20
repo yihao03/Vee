@@ -1,7 +1,6 @@
-import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Card } from 'react-native-paper';
 import { COLOR_TEXT_ACCENT, COLOR_TEXT_LIGHT } from '../constants/colors';
 import { BookingItem } from '../types/booking';
@@ -15,44 +14,14 @@ interface BookingSectionProps {
   horizontal?: boolean;
 }
 
-// Enhanced image component with better error handling
+// Simple image component using React Native's Image
 const BookingImage: React.FC<{ imageUrl: string; name: string }> = ({ imageUrl, name }) => {
   const [imageError, setImageError] = React.useState(false);
-  const [imageLoading, setImageLoading] = React.useState(true);
-
-  // Add timeout to prevent infinite loading
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (imageLoading) {
-        console.log('⏰ Image load timeout for', name);
-        setImageError(true);
-        setImageLoading(false);
-      }
-    }, 8000); // 8 second timeout
-
-    return () => clearTimeout(timeout);
-  }, [imageLoading, name]);
-
-  const handleLoad = () => {
-    console.log('✅ Image loaded successfully for', name);
-    setImageLoading(false);
-  };
 
   const handleError = (error: any) => {
-    console.log('❌ Image load error for', name, ':', error);
+    console.log('❌ Image load error for', name, 'URL:', imageUrl, 'Error:', error);
     setImageError(true);
-    setImageLoading(false);
   };
-
-  // Show loading state
-  if (imageLoading) {
-    return (
-      <View style={styles.placeholderContainer}>
-        <Text style={styles.placeholderText}>⏳</Text>
-        <Text style={styles.placeholderLabel}>Loading...</Text>
-      </View>
-    );
-  }
 
   // Show error state
   if (imageError) {
@@ -68,12 +37,8 @@ const BookingImage: React.FC<{ imageUrl: string; name: string }> = ({ imageUrl, 
     <Image
       source={{ uri: imageUrl }}
       style={styles.cardImage}
-      contentFit="cover"
-      transition={300}
-      onLoad={handleLoad}
+      resizeMode="cover"
       onError={handleError}
-      placeholder="🏨"
-      placeholderContentFit="cover"
     />
   );
 };

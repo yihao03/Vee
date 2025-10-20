@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Markdown from 'react-native-markdown-display';
 import { COLOR_MESSAGE_AI, COLOR_MESSAGE_USER, COLOR_TEXT_ACCENT, COLOR_TEXT_LIGHT } from '../constants/colors';
 import { BookingItem } from '../types/booking';
 import { AIRecommendation } from '../types/gemini';
@@ -51,9 +52,75 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   return (
     <View style={[styles.messageContainer, isUser ? styles.userMessage : styles.aiMessage]}>
       <View style={[styles.messageBubble, isUser ? styles.userBubble : styles.aiBubble]}>
-        <Text style={[styles.messageText, isUser ? styles.userMessageText : styles.aiMessageText]}>
+        <Markdown 
+          style={{
+            body: {
+              fontSize: 16,
+              lineHeight: 20,
+              color: isUser ? COLOR_TEXT_LIGHT : COLOR_TEXT_LIGHT,
+            },
+            paragraph: {
+              marginTop: 0,
+              marginBottom: 0,
+            },
+            heading1: {
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: isUser ? COLOR_TEXT_LIGHT : COLOR_TEXT_LIGHT,
+            },
+            heading2: {
+              fontSize: 18,
+              fontWeight: 'bold',
+              color: isUser ? COLOR_TEXT_LIGHT : COLOR_TEXT_LIGHT,
+            },
+            heading3: {
+              fontSize: 16,
+              fontWeight: 'bold',
+              color: isUser ? COLOR_TEXT_LIGHT : COLOR_TEXT_LIGHT,
+            },
+            strong: {
+              fontWeight: 'bold',
+              color: isUser ? COLOR_TEXT_LIGHT : COLOR_TEXT_LIGHT,
+            },
+            em: {
+              fontStyle: 'italic',
+              color: isUser ? COLOR_TEXT_LIGHT : COLOR_TEXT_LIGHT,
+            },
+            code_inline: {
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              paddingHorizontal: 4,
+              paddingVertical: 2,
+              borderRadius: 4,
+              fontSize: 14,
+              color: isUser ? COLOR_TEXT_LIGHT : COLOR_TEXT_LIGHT,
+            },
+            code_block: {
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              padding: 12,
+              borderRadius: 8,
+              fontSize: 14,
+              color: isUser ? COLOR_TEXT_LIGHT : COLOR_TEXT_LIGHT,
+            },
+            link: {
+              color: COLOR_TEXT_ACCENT,
+              textDecorationLine: 'underline',
+            },
+            bullet_list: {
+              marginTop: 0,
+              marginBottom: 0,
+            },
+            ordered_list: {
+              marginTop: 0,
+              marginBottom: 0,
+            },
+            list_item: {
+              marginTop: 0,
+              marginBottom: 4,
+            },
+          }}
+        >
           {message}
-        </Text>
+        </Markdown>
         {renderAIExplanation()}
       </View>
       {renderRecommendationCards()}

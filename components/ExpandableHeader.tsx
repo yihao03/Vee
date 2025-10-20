@@ -2,26 +2,25 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef } from 'react';
 import {
-    ActivityIndicator,
-    Animated,
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View
+  ActivityIndicator,
+  Animated,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native';
 import { Searchbar, TextInput } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-    COLOR_CHAT_BG,
-    COLOR_PRIMARY_DARK,
-    COLOR_TEXT_ACCENT,
-    COLOR_TEXT_LIGHT,
-    GRADIENT_HEADER_COLORS
+  COLOR_CHAT_BG,
+  COLOR_TEXT_ACCENT,
+  COLOR_TEXT_LIGHT,
+  GRADIENT_HEADER_COLORS
 } from '../constants/colors';
 import { BookingItem } from '../types/booking';
 import { AIRecommendation } from '../types/gemini';
@@ -282,6 +281,8 @@ const ExpandableHeader: React.FC<ExpandableHeaderProps> = ({
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                     style={styles.chatInput}
+                    placeholderTextColor="#B3C1E3"
+                    selectionColor={COLOR_TEXT_ACCENT}
                     multiline
                     maxLength={500}
                     theme={{
@@ -421,7 +422,9 @@ const styles = StyleSheet.create({
   chatInputWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    backgroundColor: COLOR_PRIMARY_DARK,
+    backgroundColor: '#0D1321',
+    borderWidth: 1,
+    borderColor: 'rgba(20, 52, 203, 0.35)',
     borderRadius: 25,
     paddingHorizontal: 15,
     paddingVertical: 5,

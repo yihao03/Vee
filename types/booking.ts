@@ -20,6 +20,7 @@ export interface BookingItem {
   name: string;
   imageUrl: string;
   short_description?: string;
+  long_description?: string;
   price?: string;
 }
 

@@ -41,13 +41,14 @@ User message: "${userMessage}"
 Determine if the user is looking for:
 - Hotels/accommodation (type: "hotels")
 - Restaurants/food (type: "restaurants") 
+- Cab/taxi/transportation (type: "cabs")
 - Both (type: "both")
 - Neither (type: "none")
 
 Extract any specific search terms like location, cuisine type, hotel type, etc.
 
 Be generous with interpretation - err on the side of providing suggestions.
-Consider context: "I'm hungry" = restaurants, "Need a place to stay" = hotels, "Planning a trip" = both`;
+Consider context: "I'm hungry" = restaurants, "Need a place to stay" = hotels, "Need a ride" = cabs, "Planning a trip" = both`;
 
       const result = await this.analysisModel.generateContent(analysisPrompt);
       const response = await result.response;

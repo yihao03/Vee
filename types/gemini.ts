@@ -4,7 +4,7 @@
 
 export interface BookingIntentAnalysis {
   needsSuggestions: boolean;
-  type: 'hotels' | 'restaurants' | 'both' | 'none';
+  type: 'hotels' | 'restaurants' | 'cabs' | 'both' | 'none';
   searchQuery?: string;
 }
 
@@ -17,8 +17,8 @@ export const BOOKING_INTENT_SCHEMA = {
     },
     type: {
       type: "string" as const,
-      enum: ["hotels", "restaurants", "both", "none"] as const,
-      description: "Type of booking needed: hotels, restaurants, both, or none"
+      enum: ["hotels", "restaurants", "cabs", "both", "none"] as const,
+      description: "Type of booking needed: hotels, restaurants, cabs, both, or none"
     },
     searchQuery: {
       type: "string" as const,
