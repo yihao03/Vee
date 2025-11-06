@@ -1,4 +1,6 @@
-# Welcome to your Expo app 👋
+# Vee - Digital AI Concierge
+
+This is an app created for the Singapore Fintech Festival 2025 hackathon in collaboration with Visa. Vee is a digital AI concierge designed to enhance customer experiences by providing personalized assistance and support. Through this, we expect to increase customer satisfaction and loyalty, while providing revenue stream for Visa through provision of access to MCP Services API. With this product, our team were among the 5 other finalists in this hackathon.
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
