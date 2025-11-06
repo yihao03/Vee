@@ -7,6 +7,7 @@ import {
   Alert,
   Dimensions,
   Image,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -146,6 +147,10 @@ const styles = StyleSheet.create({
 export default function BookingDetailScreen() {
   const { item } = useLocalSearchParams<{ item: string }>();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [cabModalVisible, setCabModalVisible] = useState(false);
+  const [cabSuggestions, setCabSuggestions] = useState<BookingItem[]>([]);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState('');
 
   // Parse the booking item from the route params
   const bookingItem: BookingItem = item ? JSON.parse(item) : {
@@ -170,37 +175,33 @@ export default function BookingDetailScreen() {
 
     try {
       // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       // Simulate random success/failure (90% success rate)
-      const isSuccess = Math.random() > 0.1;
+      const isSuccess = Math.random() > 0.001;
 
       if (isSuccess) {
-        // Trigger cab booking follow-up by sending a message to the AI
+        // Trigger cab booking follow-up by sending a message to the AI and awaiting the response
         const bookingConfirmationMessage = `I just successfully booked ${bookingItem.name} for ${bookingItem.price}. The booking is confirmed and paid for.`;
+        let cabFollowUpText: string | undefined;
+        let cabOptionNames: string[] | undefined;
+        try {
+          const aiResponse = await geminiService.sendMessage(bookingConfirmationMessage);
+          if (aiResponse && aiResponse.message) {
+            cabFollowUpText = aiResponse.message;
+          }
+          if (aiResponse && aiResponse.suggestions && Array.isArray(aiResponse.suggestions)) {
+            setCabSuggestions(aiResponse.suggestions as BookingItem[]);
+            cabOptionNames = aiResponse.suggestions.map((s: any) => s?.name).filter(Boolean);
+          }
+        } catch (e) {
+          console.log('Cab follow-up trigger failed:', e);
+        }
 
-        // Send the confirmation message to trigger cab follow-up
-        geminiService.sendMessage(bookingConfirmationMessage).catch(error => {
-          console.log('Cab follow-up trigger failed:', error);
-        });
-
-        Alert.alert(
-          'Booking Confirmed! 🎉',
-          `Your booking for ${bookingItem.name} has been successfully processed using your GlobeTrotter+ Visa card.\n\nTransaction ID: GT${Date.now()}\nAmount: ${bookingItem.price}\n\nYou will receive a confirmation email shortly.`,
-          [
-            {
-              text: 'View Booking',
-              onPress: () => {
-                // Navigate to a booking confirmation screen or back to home
-                router.back();
-              }
-            },
-            {
-              text: 'Done',
-              onPress: () => router.back()
-            }
-          ]
+        setConfirmMessage(
+          `Your booking for ${bookingItem.name} has been successfully processed using your GlobeTrotter+ Visa card.\n\nTransaction ID: GT${Date.now()}\nAmount: ${bookingItem.price}\n\nYou will receive a confirmation email shortly.`
         );
+        setConfirmModalVisible(true);
       } else {
         Alert.alert(
           'Transaction Failed',
@@ -259,7 +260,7 @@ export default function BookingDetailScreen() {
 
           <View style={styles.cardInfo}>
             <Text style={styles.cardInfoText}>
-              💳 Payment will be processed using your Globaltrotter+ Visa card
+              💳 Payment will be processed using your GlobeTrotter+ Visa card
             </Text>
           </View>
         </View>
@@ -279,6 +280,104 @@ export default function BookingDetailScreen() {
           <Text style={styles.bookButtonText}>Book Now</Text>
         )}
       </TouchableOpacity>
+
+      {/* Cab Options Modal */}
+      <Modal
+        transparent
+        visible={cabModalVisible}
+        animationType="fade"
+        onRequestClose={() => setCabModalVisible(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 24 }}>
+          <View style={{ backgroundColor: COLOR_BACKGROUND_APP, borderRadius: 16, padding: 20 }}>
+            <Text style={{ color: COLOR_TEXT_LIGHT, fontSize: 18, fontWeight: 'bold', marginBottom: 12 }}>
+              Choose a cab option
+            </Text>
+            {cabSuggestions.map((opt) => (
+              <TouchableOpacity
+                key={opt.id}
+                style={{
+                  backgroundColor: 'rgba(245, 232, 199, 0.1)',
+                  borderColor: 'rgba(245, 232, 199, 0.3)',
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
+                  marginBottom: 10,
+                }}
+                onPress={() => {
+                  setCabModalVisible(false);
+                  Alert.alert('Cab selected', `You chose ${opt.name}.`);
+                }}
+              >
+                <Text style={{ color: COLOR_TEXT_ACCENT, fontWeight: '600', fontSize: 16 }}>{opt.name}</Text>
+                {!!opt.short_description && (
+                  <Text style={{ color: COLOR_TEXT_LIGHT, marginTop: 4 }}>{opt.short_description}</Text>
+                )}
+                {!!opt.price && (
+                  <Text style={{ color: COLOR_TEXT_LIGHT, marginTop: 4 }}>Price: {opt.price}</Text>
+                )}
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              onPress={() => setCabModalVisible(false)}
+              style={{ alignSelf: 'flex-end', marginTop: 8 }}
+            >
+              <Text style={{ color: COLOR_TEXT_ACCENT, fontWeight: '600' }}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Booking Confirmation Modal (uniform styling) */}
+      <Modal
+        transparent
+        visible={confirmModalVisible}
+        animationType="fade"
+        onRequestClose={() => setConfirmModalVisible(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 24 }}>
+          <View style={{ backgroundColor: COLOR_BACKGROUND_APP, borderRadius: 16, padding: 20 }}>
+            <Text style={{ color: COLOR_TEXT_LIGHT, fontSize: 18, fontWeight: 'bold', marginBottom: 12 }}>
+              Booking Confirmed! 🎉
+            </Text>
+            <Text style={{ color: COLOR_TEXT_LIGHT, marginBottom: 16, lineHeight: 20 }}>
+              {confirmMessage}
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+              <TouchableOpacity
+                onPress={() => {
+                  // Open cab modal
+                  setConfirmModalVisible(false);
+                  if (!cabSuggestions || cabSuggestions.length === 0) {
+                    setCabSuggestions([
+                      { id: 'cab-1', name: 'Uber', imageUrl: '', short_description: 'Ride-sharing', price: 'Varies' },
+                      { id: 'cab-2', name: 'Lyft', imageUrl: '', short_description: 'Ride-sharing', price: 'Varies' },
+                      { id: 'cab-3', name: 'Local Taxi', imageUrl: '', short_description: 'Metered taxi', price: 'Metered' },
+                    ] as BookingItem[]);
+                  }
+                  setCabModalVisible(true);
+                }}
+                style={{ marginRight: 16 }}
+              >
+                <Text style={{ color: COLOR_TEXT_ACCENT, fontWeight: '600' }}>Book a Cab</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setConfirmModalVisible(false);
+                  router.back();
+                }}
+                style={{ marginRight: 16 }}
+              >
+                <Text style={{ color: COLOR_TEXT_ACCENT, fontWeight: '600' }}>View Booking</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => { setConfirmModalVisible(false); router.back(); }}>
+                <Text style={{ color: COLOR_TEXT_ACCENT, fontWeight: '600' }}>Done</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
